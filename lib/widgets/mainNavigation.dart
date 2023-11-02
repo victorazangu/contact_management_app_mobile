@@ -54,19 +54,19 @@ class _MainNavigationState extends State<MainNavigation> {
           children: _widgetOptions,
         ),
       ),
-      appBar: AppBar(
-        backgroundColor: DefaultValues.mainPrimaryColor,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/default.png'),
-            ),
-          ],
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: DefaultValues.mainPrimaryColor,
+      //   elevation: 0,
+      //   title: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     crossAxisAlignment: CrossAxisAlignment.center,
+      //     children: [
+      //       CircleAvatar(
+      //         backgroundImage: AssetImage('assets/images/default.png'),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: DefaultValues.mainBackgroundColor,

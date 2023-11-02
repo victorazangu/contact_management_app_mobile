@@ -52,8 +52,7 @@ class Group extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          height: 500,
+        Expanded(
           child: ListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: 6,

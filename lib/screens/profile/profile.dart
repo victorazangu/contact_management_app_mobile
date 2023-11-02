@@ -21,47 +21,68 @@ class _ProfileState extends State<Profile> {
 
   bool isEditing = false;
 
+  // Scroll controller for the ListView
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    // Dispose the scroll controller when not needed
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        elevation: 4,
-        color: const Color.fromARGB(255, 66, 41, 7),
-        margin: EdgeInsets.all(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              buildProfileImage(),
-              buildInfoField("Name", name, nameController),
-              buildInfoField("Phone", phone, phoneController),
-              buildInfoField("Email", email, emailController),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.disabled)) {
-                        return DefaultValues.mainPrimaryColor.withOpacity(0.5);
-                      }
-                      return DefaultValues.mainPrimaryColor;
-                    },
-                  ),
+    return SingleChildScrollView(
+      child: Center(
+        child: Card(
+          elevation: 4,
+          color: const Color.fromARGB(255, 66, 41, 7),
+          margin: EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20),
+                buildProfileImage(),
+                ListView(
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  children: [
+                    buildInfoField("Name", name, nameController),
+                    buildInfoField("Phone", phone, phoneController),
+                    buildInfoField("Email", email, emailController),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return DefaultValues.mainPrimaryColor
+                                  .withOpacity(0.5);
+                            }
+                            return DefaultValues.mainPrimaryColor;
+                          },
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          if (isEditing) {
+                            name = nameController.text;
+                            phone = phoneController.text;
+                            email = emailController.text;
+                          }
+                          isEditing = !isEditing;
+                        });
+                      },
+                      child: Text(isEditing ? 'Save' : 'Edit'),
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  setState(() {
-                    if (isEditing) {
-                      name = nameController.text;
-                      phone = phoneController.text;
-                      email = emailController.text;
-                    }
-                    isEditing = !isEditing;
-                  });
-                },
-                child: Text(isEditing ? 'Save' : 'Edit'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

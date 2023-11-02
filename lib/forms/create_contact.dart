@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
+import '../services/contact_service.dart';
 import '../utils/defaultValues.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:dio/dio.dart';
 
 class CreateContactForm extends StatefulWidget {
   @override
@@ -13,16 +14,53 @@ class _CreateContactFormState extends State<CreateContactForm> {
   File? _selectedImage;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final ContactWebService _contactWebService = ContactWebService();
 
   @override
   void dispose() {
     _nameController.dispose();
     _contactController.dispose();
-    _imageController.dispose();
-    _descriptionController.dispose();
     super.dispose();
+  }
+
+  void _submitForm() async {
+    final String name = _nameController.text;
+    final String contact = _contactController.text;
+    _nameController.clear();
+    _contactController.clear();
+
+    FormData formData = FormData.fromMap({
+      "name": name,
+      "contact": contact,
+      "image": await MultipartFile.fromFile(_selectedImage!.path),
+    });
+
+    try {
+      await _contactWebService.createContact(formData);
+
+      // if (c != null) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text('Contact added'),
+      //       behavior: SnackBarBehavior.floating,
+      //       backgroundColor: Colors.green,
+      //     ),
+      //   );
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Error. Please try again.'),
+      //       behavior: SnackBarBehavior.floating,
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
+      setState(() {
+        _selectedImage = null;
+      });
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override
@@ -37,7 +75,7 @@ class _CreateContactFormState extends State<CreateContactForm> {
             child: TextField(
               controller: _nameController,
               style: TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Contact Name',
                 labelStyle: TextStyle(color: Colors.white),
                 hintText: 'Enter contact name',
@@ -56,29 +94,10 @@ class _CreateContactFormState extends State<CreateContactForm> {
             child: TextField(
               controller: _contactController,
               style: TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Contact',
                 labelStyle: TextStyle(color: Colors.white),
                 hintText: 'Enter contact information',
-                hintStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 5, top: 5),
-            child: TextField(
-              controller: _descriptionController,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Enter description',
                 hintStyle: TextStyle(color: Colors.white),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
@@ -104,7 +123,8 @@ class _CreateContactFormState extends State<CreateContactForm> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        DefaultValues.mainBackgroundColor),
+                      DefaultValues.mainBackgroundColor,
+                    ),
                   ),
                   onPressed: () async {
                     final XFile? image = await ImagePicker()
@@ -125,25 +145,12 @@ class _CreateContactFormState extends State<CreateContactForm> {
           Container(
             padding: EdgeInsets.all(5),
             child: ElevatedButton(
-              onPressed: () {
-                final String name = _nameController.text;
-                final String contact = _contactController.text;
-                final String image = _imageController.text;
-                final String description = _descriptionController.text;
-                print('Name: $name');
-                print('Name: $contact');
-                print('Image: $image');
-                print('Description: $description');
-
-                _nameController.clear();
-                _contactController.clear();
-                _imageController.clear();
-                _descriptionController.clear();
-              },
+              onPressed: _submitForm,
               child: Text('Add Contact'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    DefaultValues.mainBackgroundColor),
+                  DefaultValues.mainBackgroundColor,
+                ),
               ),
             ),
           ),
