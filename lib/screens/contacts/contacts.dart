@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 import "../../forms/create_contact.dart";
-import "../../services/contact_service.dart";
+import "../../models/contact.dart";
 import "../../utils/defaultValues.dart";
 import "../../viewmodels/contacts/contact_provider.dart";
 import "contact_card.dart";
@@ -21,16 +21,12 @@ class _ContactsState extends State<Contacts> {
     Provider.of<ContactProvider>(context, listen: false).allContacts();
   }
 
-  final ContactWebService _contactWebService = ContactWebService();
-
   @override
   Widget build(BuildContext context) {
     var contactProvider = Provider.of<ContactProvider>(context);
     var contacts = contactProvider.contacts;
-    print("bad habit $contacts");
-    var badHabbit = _contactWebService.fetchAllContacts();
+    print(" contacts $contacts");
 
-    print("bad habit $badHabbit");
     return Column(
       children: [
         Container(

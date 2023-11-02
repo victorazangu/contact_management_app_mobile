@@ -194,6 +194,7 @@ class _RegisterState extends State<Register> {
                             SizedBox(height: 10),
                             TextFormField(
                               style: const TextStyle(color: Colors.grey),
+                              obscureText: true,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),

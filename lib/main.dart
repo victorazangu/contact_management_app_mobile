@@ -15,34 +15,34 @@ void main() async {
   Hive.init(appDocumentDirectory.path);
   await Hive.openBox<String>("tokenBox");
 
-  MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => ContactProvider()),
-      ChangeNotifierProvider(create: (_) => GroupProvider()),
-    ],
-    child: const MyApp(),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Contact manager',
-      routes: {
-        '/': (context) {
-          return const Login();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ContactProvider()),
+        ChangeNotifierProvider(create: (_) => GroupProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Contact manager',
+        routes: {
+          '/': (context) {
+            return const Login();
+          },
+          '/register': (context) {
+            return Register();
+          },
+          '/home': (context) {
+            return const MainNavigation();
+          },
         },
-        '/register': (context) {
-          return Register();
-        },
-        '/home': (context) {
-          return const MainNavigation();
-        },
-      },
+      ),
     );
   }
 }
