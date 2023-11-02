@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/group_service.dart';
 import '../utils/defaultValues.dart';
 
 class AddContactToGroupForm extends StatefulWidget {
@@ -10,12 +11,46 @@ class AddContactToGroupForm extends StatefulWidget {
 class _AddContactToGroupFormState extends State<AddContactToGroupForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+  final GroupWebService _groupWebService = GroupWebService();
+  final List<String> list = <String>[
+    'Group One',
+    'Group Two',
+    'Group Three',
+    'Group Four'
+  ];
+  String dropdownValue = 'Group One';
+  int group_id = 1;
+  int contact_id = 0;
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _contactController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+  }
+
+  void _submitForm() async {
+    _nameController.clear();
+    _contactController.clear();
+
+    try {
+      await _groupWebService.addContactToGroup(contact_id, group_id);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Contact added'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error. Please try again.'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -26,58 +61,41 @@ class _AddContactToGroupFormState extends State<AddContactToGroupForm> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: EdgeInsets.only(bottom: 5),
-            child: TextField(
-              controller: _nameController,
-              style: TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Contact Name',
-                labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Enter contact name',
-                hintStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
+            width: double.infinity,
+            child: Text(
+              "Select Group",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
+          SizedBox(height: 10.0),
           Container(
-            margin: EdgeInsets.only(bottom: 5, top: 5),
-            child: TextField(
-              controller: _contactController,
-              style: TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Contact',
-                labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Enter contact information',
-                hintStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
+            width: double.infinity,
+            child: DropdownButton<String>(
+              value: dropdownValue,
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownValue = value!;
+                  group_id = getGroupIdFromName(value);
+                });
+              },
+              items: list.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
           ),
-          SizedBox(height: 2.0),
+          SizedBox(height: 10.0),
           Container(
+            width: double.infinity,
             padding: EdgeInsets.all(5),
             child: ElevatedButton(
-              onPressed: () {
-                final String name = _nameController.text;
-                final String contact = _contactController.text;
-
-                print('Name: $name');
-                print('Name: $contact');
-
-                _nameController.clear();
-                _contactController.clear();
-              },
-              child: Text('Add Contact to group'),
+              onPressed: _submitForm,
+              child: Text('Add Contact to Group'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
                     DefaultValues.mainBackgroundColor),
@@ -87,5 +105,19 @@ class _AddContactToGroupFormState extends State<AddContactToGroupForm> {
         ],
       ),
     );
+  }
+
+  int getGroupIdFromName(String groupName) {
+    if (groupName == 'Group One') {
+      return 1;
+    } else if (groupName == 'Group Two') {
+      return 2;
+    } else if (groupName == 'Group Three') {
+      return 3;
+    } else if (groupName == 'Group Four') {
+      return 4;
+    }
+
+    return 0;
   }
 }

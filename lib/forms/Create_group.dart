@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/group_service.dart';
 import '../utils/defaultValues.dart';
 
 class CreateGroupForm extends StatefulWidget {
@@ -9,17 +10,44 @@ class CreateGroupForm extends StatefulWidget {
 
 class _CreateGroupFormState extends State<CreateGroupForm> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final GroupWebService _groupWebService = GroupWebService();
 
   @override
   void dispose() {
     _nameController.dispose();
-    _contactController.dispose();
-    _imageController.dispose();
-    _descriptionController.dispose();
+
     super.dispose();
+  }
+
+  void _submitForm() async {
+    final String name = _nameController.text;
+
+    _nameController.clear();
+
+    try {
+      print(name);
+      await _groupWebService.createGroup({name: name});
+
+      // if (c != null) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text('Contact added'),
+      //       behavior: SnackBarBehavior.floating,
+      //       backgroundColor: Colors.green,
+      //     ),
+      //   );
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Error. Please try again.'),
+      //       behavior: SnackBarBehavior.floating,
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override
@@ -35,66 +63,9 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
               controller: _nameController,
               style: TextStyle(color: Colors.white),
               decoration: const InputDecoration(
-                labelText: 'Contact Name',
+                labelText: 'Group Name',
                 labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Enter contact name',
-                hintStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 5, top: 5),
-            child: TextField(
-              controller: _contactController,
-              style: TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Contact',
-                labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Enter contact information',
-                hintStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 5, top: 5),
-            child: TextField(
-              controller: _imageController,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Image URL',
-                labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Enter image URL',
-                hintStyle: TextStyle(color: Colors.white),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 5, top: 5),
-            child: TextField(
-              controller: _descriptionController,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Enter description',
+                hintText: 'Enter group name',
                 hintStyle: TextStyle(color: Colors.white),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
@@ -109,22 +80,8 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
           Container(
             padding: EdgeInsets.all(5),
             child: ElevatedButton(
-              onPressed: () {
-                final String name = _nameController.text;
-                final String contact = _contactController.text;
-                final String image = _imageController.text;
-                final String description = _descriptionController.text;
-                print('Name: $name');
-                print('Name: $contact');
-                print('Image: $image');
-                print('Description: $description');
-
-                _nameController.clear();
-                _contactController.clear();
-                _imageController.clear();
-                _descriptionController.clear();
-              },
-              child: Text('Add Contact'),
+              onPressed: _submitForm,
+              child: Text('Add group'),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
                     DefaultValues.mainBackgroundColor),

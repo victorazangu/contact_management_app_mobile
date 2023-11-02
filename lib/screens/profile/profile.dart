@@ -33,57 +33,51 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
-        child: Card(
-          elevation: 4,
-          color: const Color.fromARGB(255, 66, 41, 7),
-          margin: EdgeInsets.all(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+    return Center(
+      // Center the Card vertically
+      child: Card(
+        elevation: 4,
+        color: const Color.fromARGB(255, 66, 41, 7),
+        margin: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            buildProfileImage(),
+            ListView(
+              shrinkWrap: true,
+              controller: _scrollController,
               children: [
+                buildInfoField("Name", name, nameController),
+                buildInfoField("Phone", phone, phoneController),
+                buildInfoField("Email", email, emailController),
                 SizedBox(height: 20),
-                buildProfileImage(),
-                ListView(
-                  shrinkWrap: true,
-                  controller: _scrollController,
-                  children: [
-                    buildInfoField("Name", name, nameController),
-                    buildInfoField("Phone", phone, phoneController),
-                    buildInfoField("Email", email, emailController),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.disabled)) {
-                              return DefaultValues.mainPrimaryColor
-                                  .withOpacity(0.5);
-                            }
-                            return DefaultValues.mainPrimaryColor;
-                          },
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          if (isEditing) {
-                            name = nameController.text;
-                            phone = phoneController.text;
-                            email = emailController.text;
-                          }
-                          isEditing = !isEditing;
-                        });
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.disabled)) {
+                          return DefaultValues.mainPrimaryColor
+                              .withOpacity(0.5);
+                        }
+                        return DefaultValues.mainPrimaryColor;
                       },
-                      child: Text(isEditing ? 'Save' : 'Edit'),
                     ),
-                  ],
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if (isEditing) {
+                        name = nameController.text;
+                        phone = phoneController.text;
+                        email = emailController.text;
+                      }
+                      isEditing = !isEditing;
+                    });
+                  },
+                  child: Text(isEditing ? 'Save' : 'Edit'),
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

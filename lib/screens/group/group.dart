@@ -12,45 +12,52 @@ class Group extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 25,
+        Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.only(top: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/images/default.png'),
               ),
-              onPressed: () {
-                showModalBottomSheet<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      padding: EdgeInsets.all(20),
-                      color: DefaultValues.mainPrimaryColor,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.close),
-                                color: Colors.white,
-                                onPressed: () => Navigator.pop(context),
-                              )
-                            ],
-                          ),
-                          CreateGroupForm(),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+              IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 25,
+                ),
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        padding: EdgeInsets.all(20),
+                        color: DefaultValues.mainPrimaryColor,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.close),
+                                  color: Colors.white,
+                                  onPressed: () => Navigator.pop(context),
+                                )
+                              ],
+                            ),
+                            CreateGroupForm(),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         Expanded(
           child: ListView.builder(

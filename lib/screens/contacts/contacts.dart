@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 import "../../forms/create_contact.dart";
-import "../../models/contact.dart";
 import "../../utils/defaultValues.dart";
 import "../../viewmodels/contacts/contact_provider.dart";
 import "contact_card.dart";
@@ -25,7 +24,7 @@ class _ContactsState extends State<Contacts> {
   Widget build(BuildContext context) {
     var contactProvider = Provider.of<ContactProvider>(context);
     var contacts = contactProvider.contacts;
-    print(" contacts $contacts");
+    print("contacts $contacts");
 
     return Column(
       children: [
@@ -79,7 +78,7 @@ class _ContactsState extends State<Contacts> {
         Expanded(
           child: ListView.builder(
               padding: const EdgeInsets.all(8),
-              itemCount: contacts.length,
+              itemCount: 6,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),

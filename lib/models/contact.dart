@@ -8,7 +8,7 @@ class Contact {
   final String image;
   final String created_at;
   final List<Group>? groups;
-  final User user;
+  final User? user;
 
   Contact({
     required this.id,
@@ -16,13 +16,13 @@ class Contact {
     required this.contact,
     required this.image,
     required this.created_at,
-    required this.groups,
-    required this.user,
+    this.groups,
+    this.user,
   });
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     final List<dynamic> groupList = json['groups'];
-    final List<Group> groups = (groupList != null)
+    final List<Group> groups = (groupList != [])
         ? groupList.map((group) => Group.fromJson(group)).toList()
         : <Group>[];
 

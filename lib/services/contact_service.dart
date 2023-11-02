@@ -38,7 +38,9 @@ class ContactWebService {
     dio.options.headers['Authorization'] = 'Bearer $token';
     final response = await dio.get(Constants.multipleContacts);
     if (response.statusCode == 200) {
-      final List<dynamic> data = response.data;
+      final List<Map<String, dynamic>> data =
+          List<Map<String, dynamic>>.from(response.data);
+      print("data inside ContactWebService $data");
       final List<Contact> contacts =
           data.map((contactData) => Contact.fromJson(contactData)).toList();
       return contacts;
