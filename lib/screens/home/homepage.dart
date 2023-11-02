@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 GestureDetector(
                   onTap: () => {
+                    print("cliked")
                     // widget.changeSelectedIndex(1)
                   },
                   child: const Text(
@@ -116,12 +117,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () => {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return Group();
-                    }))
-                  },
+                  onTap: () => {print("cliked")},
                   child: const Text(
                     'view all',
                     style: TextStyle(color: Colors.orange),
