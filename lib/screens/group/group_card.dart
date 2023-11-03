@@ -3,7 +3,8 @@ import "package:flutter/material.dart";
 import "../../utils/defaultValues.dart";
 
 class GroupCard extends StatelessWidget {
-  const GroupCard({super.key});
+  final String groupName;
+  const GroupCard({Key? key, required this.groupName});
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +23,14 @@ class GroupCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ClipOval(
-            child: Image.asset(
-              'assets/images/default.png',
-            ),
+            child: Image.asset('assets/images/default.png'),
           ),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: DefaultValues.mainPrimaryColor,
             ),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(20.0),
               child: Row(
                 children: [
@@ -43,7 +42,7 @@ class GroupCard extends StatelessWidget {
                         color: DefaultValues.mainBackgroundColor,
                       ),
                       SizedBox(width: 5),
-                      Text("Group Name", style: ThemeStyling.regular_14),
+                      Text(groupName, style: ThemeStyling.regular_14),
                     ],
                   ),
                 ],

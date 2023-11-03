@@ -23,12 +23,14 @@ class UserWebService {
 
   Future<Map<String, dynamic>?> profile() async {
     final token = await loadToken();
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+
     final response = await dio.get(Constants.profile);
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = response.data;
+
+      print("profile at service $responseData");
       return responseData;
     } else {
       throw Exception("Error");

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../utils/defaultValues.dart';
+import '../../viewmodels/contacts/contact_provider.dart';
+import '../../viewmodels/groups/group_provider.dart';
 import '../../widgets/item_card.dart';
 import '../group/group.dart';
 
@@ -14,7 +17,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<ContactListViewModel>(context, listen: false).allContacts();
+    Provider.of<GroupListViewModel>(context, listen: false).allGroups();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var contactProvider = Provider.of<ContactListViewModel>(context);
+    var contacts = contactProvider.contacts;
+    var groupProvider = Provider.of<GroupListViewModel>(context);
+    var groups = groupProvider.groups;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -70,29 +84,15 @@ class _HomePageState extends State<HomePage> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: [
-                  ItemCard(
-                    name: 'Victor Azangu',
-                    contact: '+254726262626',
+                children: contacts.map((contact) {
+                  return ItemCard(
+                    name: contact.name,
+                    contact: contact.contact,
                     image: 'assets/images/bg.jpg',
-                    date: '12th Dec 2023',
+                    date: contact.created_at,
                     liked: true,
-                  ),
-                  ItemCard(
-                    name: 'Victor Azangu',
-                    contact: '+254726262626',
-                    image: 'assets/images/bg.jpg',
-                    date: '12th Dec 2023',
-                    liked: true,
-                  ),
-                  ItemCard(
-                    name: 'Victor Azangu',
-                    contact: '+254726262626',
-                    image: 'assets/images/bg.jpg',
-                    date: '12th Dec 2023',
-                    liked: true,
-                  ),
-                ],
+                  );
+                }).toList(),
               ),
             ),
             SizedBox(
@@ -131,29 +131,15 @@ class _HomePageState extends State<HomePage> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: [
-                  ItemCard(
-                    name: 'Victor Azangu',
-                    contact: '+254726262626',
+                children: groups.map((group) {
+                  return ItemCard(
+                    name: group.name,
+                    contact: "",
                     image: 'assets/images/bg.jpg',
-                    date: '12th Dec 2023',
+                    date: group.created_at,
                     liked: true,
-                  ),
-                  ItemCard(
-                    name: 'Victor Azangu',
-                    contact: '+254726262626',
-                    image: 'assets/images/bg.jpg',
-                    date: '12th Dec 2023',
-                    liked: true,
-                  ),
-                  ItemCard(
-                    name: 'Victor Azangu',
-                    contact: '+254726262626',
-                    image: 'assets/images/bg.jpg',
-                    date: '12th Dec 2023',
-                    liked: true,
-                  ),
-                ],
+                  );
+                }).toList(),
               ),
             )
           ],

@@ -16,23 +16,6 @@ class ContactWebService {
     dio.options.headers['Content-Type'] = 'application/json';
   }
 
-  // Future<List<Contact>> fetchAllContacts() async {
-  //   final token = await loadToken();
-  //   print("token inside ContactWebService $token");
-  //   dio.options.headers['Authorization'] = 'Bearer $token';
-
-  //   final response = await dio.get(Constants.multipleContacts);
-  //   if (response.statusCode == 200) {
-  //     final result = response.data;
-  //     print("response.data ${response.data}");
-  //     Iterable list = result;
-  //     print("list inside ContactWebService $list");
-  //     return list.map((contact) => Contact.fromJson(contact)).toList();
-  //   } else {
-  //     throw Exception("Error");
-  //   }
-  // }
-
   Future<List<Contact>> fetchAllContacts() async {
     final token = await loadToken();
     dio.options.headers['Authorization'] = 'Bearer $token';
@@ -40,7 +23,6 @@ class ContactWebService {
     if (response.statusCode == 200) {
       final List<Map<String, dynamic>> data =
           List<Map<String, dynamic>>.from(response.data);
-      print("data inside ContactWebService $data");
       final List<Contact> contacts =
           data.map((contactData) => Contact.fromJson(contactData)).toList();
       return contacts;
@@ -49,15 +31,16 @@ class ContactWebService {
     }
   }
 
-  Future<List<Contact>> createContact(data) async {
+  Future<Map<String, dynamic>> createContact(data) async {
     final token = await loadToken();
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-      dio.options.headers['Content-Type'] = 'multipart/form-data';
-    }
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    dio.options.headers['Content-Type'] = 'multipart/form-data';
+
     final response = await dio.post(Constants.multipleContacts, data: data);
     if (response.statusCode == 201) {
-      return response.data;
+  
+      return response.data['data'];
     } else {
       throw Exception("Error");
     }

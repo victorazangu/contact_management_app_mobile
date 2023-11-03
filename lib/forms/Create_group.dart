@@ -25,26 +25,8 @@ class _CreateGroupFormState extends State<CreateGroupForm> {
     _nameController.clear();
 
     try {
-      print(name);
-      await _groupWebService.createGroup({name: name});
-
-      // if (c != null) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text('Contact added'),
-      //       behavior: SnackBarBehavior.floating,
-      //       backgroundColor: Colors.green,
-      //     ),
-      //   );
-      // } else {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('Error. Please try again.'),
-      //       behavior: SnackBarBehavior.floating,
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
+ 
+      await _groupWebService.createGroup({"name": name});
     } catch (e) {
       print("Error: $e");
     }

@@ -4,7 +4,14 @@ import "../../forms/add_contact_to_group.dart";
 import "../../utils/defaultValues.dart";
 
 class ContactCard extends StatelessWidget {
-  const ContactCard({super.key});
+  final String contact;
+  final int contact_id;
+
+  ContactCard({
+    Key? key,
+    required this.contact,
+    required this.contact_id,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +40,8 @@ class ContactCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               color: DefaultValues.mainPrimaryColor,
             ),
-            child: const Padding(
+            child: Padding(
+              // Remove the `const` keyword
               padding: EdgeInsets.all(5.0),
               child: Row(
                 children: [
@@ -45,7 +53,9 @@ class ContactCard extends StatelessWidget {
                         color: DefaultValues.mainBackgroundColor,
                       ),
                       SizedBox(width: 5),
-                      Text("+24554444444444", style: ThemeStyling.regular_14),
+                      Text(contact,
+                          style: ThemeStyling
+                              .regular_14), // Remove the `const` keyword
                     ],
                   ),
                 ],

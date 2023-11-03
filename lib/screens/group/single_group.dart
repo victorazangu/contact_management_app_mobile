@@ -1,11 +1,13 @@
 import "package:flutter/material.dart";
 
 import "../../utils/defaultValues.dart";
+import "../../viewmodels/groups/group_view_model.dart";
 import "../contacts/contact_card.dart";
 import "group_card.dart";
 
 class SingleGroupPage extends StatelessWidget {
-  const SingleGroupPage({super.key});
+  const SingleGroupPage({Key? key, required this.group}) : super(key: key);
+  final GroupViewModel group;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +34,16 @@ class SingleGroupPage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            GroupCard(),
+            GroupCard(groupName: group?.name ?? 'No Group'),
             Text("My contacts"),
-            ContactCard(),
-            ContactCard(),
-            ContactCard(),
-            ContactCard(),
+            Column(
+              children: (group?.contacts ?? [])
+                  .map((contact) => ContactCard(
+                        contact: contact.name,
+                        contact_id: contact.id,
+                      ))
+                  .toList(),
+            ),
           ],
         ),
       ),

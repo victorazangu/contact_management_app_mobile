@@ -17,15 +17,13 @@ class _ContactsState extends State<Contacts> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ContactProvider>(context, listen: false).allContacts();
+    Provider.of<ContactListViewModel>(context, listen: false).allContacts();
   }
 
   @override
   Widget build(BuildContext context) {
-    var contactProvider = Provider.of<ContactProvider>(context);
+    var contactProvider = Provider.of<ContactListViewModel>(context);
     var contacts = contactProvider.contacts;
-    print("contacts $contacts");
-
     return Column(
       children: [
         Container(
@@ -78,11 +76,15 @@ class _ContactsState extends State<Contacts> {
         Expanded(
           child: ListView.builder(
               padding: const EdgeInsets.all(8),
-              itemCount: 6,
+              itemCount: contacts.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),
-                  child: ContactCard(),
+                  child: ContactCard(
+                    contact: contacts[index].name,
+                    contact_id: contacts[index].id,
+                
+                  ),
                 );
               }),
         ),

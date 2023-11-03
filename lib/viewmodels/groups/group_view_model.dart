@@ -1,4 +1,3 @@
-import '../../models/contact.dart';
 import '../../models/group.dart';
 import '../../models/user.dart';
 
@@ -23,11 +22,11 @@ class GroupViewModel {
     return _group.created_at;
   }
 
-  List<Contact> get contacts {
+  List<dynamic>? get contacts {
     return _group.contacts;
   }
 
-  User get user {
+  User? get user {
     return _group.user;
   }
 }

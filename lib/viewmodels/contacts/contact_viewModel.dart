@@ -34,7 +34,6 @@
 
 import 'package:contact_management_app_mobile/models/contact.dart';
 
-import '../../models/group.dart';
 import '../../models/user.dart';
 
 class ContactViewModel {
@@ -51,7 +50,7 @@ class ContactViewModel {
   String get image => _contact.image;
 
   User? get user => _contact.user;
-  List<Group>? get groups => _contact.groups;
+  List<dynamic>? get groups => _contact.groups;
 
   String get created_at => _contact.created_at;
 }

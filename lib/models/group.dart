@@ -1,14 +1,12 @@
 import 'package:contact_management_app_mobile/models/user.dart';
 
-import 'contact.dart';
-
 class Group {
   final int id;
   final String name;
   final int user_id;
   final String created_at;
-  final List<Contact> contacts;
-  final User user;
+  final List<ContactG> contacts;
+  final User? user;
 
   Group({
     required this.id,
@@ -20,66 +18,54 @@ class Group {
   });
 
   factory Group.fromJson(Map<String, dynamic> json) {
-    final List<dynamic> contactList = json['contacts'];
-    final List<Contact> contacts =
-        contactList.map((contact) => Contact.fromJson(contact)).toList();
+    final List<dynamic> contactList = json['contacts'] ?? [];
+    final List<ContactG> contacts = contactList
+        .map((contactJson) => ContactG.fromJson(contactJson))
+        .toList();
 
     return Group(
-      id: json['id'],
-      name: json['name'],
-      user_id: json['user_id'],
-      created_at: json['created_at'],
+      id: json['id'] as int ?? 0,
+      name: json['name'] ?? '',
+      user_id: json['user_id'] ?? 0,
+      created_at: json['created_at'] ?? '',
       contacts: contacts,
-      user: User.fromJson(json['user']),
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
     );
   }
 }
 
-// class Project {
+class ContactG {
+  final int id;
+  final String name;
+  final String contact;
+  final String image;
+  final String created_at;
+  final List<Group> groups;
+  final User? user;
 
-//   final int id;
-//   final String name;
-//   final int user_id;
-//   final String created_at;
-//   final List<Contact> contacts;
-//   final User user;
- 
+  ContactG({
+    required this.id,
+    required this.name,
+    required this.contact,
+    required this.image,
+    required this.created_at,
+    required this.groups,
+    required this.user,
+  });
 
-// Project({
-//     required this.project_id,
-//     required this.project_name,
-//     required this.owner,
-//     required this.location,
-//     required this.completion,
-//     required this.type,
-//     required this.stakeholders,
-//     required this.recurrent,
-//     required this.description,
-//     required this.start_date,
-//     required this.end_date,
-//     required this.phases,
-//     required this.recurrent_cost,
-//     required this.updatedAt,
-//     required this.property,
-//   });
-  
-  
-//   factory Project.fromJson(Map<String, dynamic> json) {
-//     return Project(
-//         project_id: json['project_id'],
-//         project_name: json['project_name'],
-//         owner: json['owner'],
-//         location: json['location'],
-//         completion: json['completion'],
-//         type: json['type'],
-//         stakeholders: json['stakeholders'],
-//         recurrent: json['recurrent'],
-//         description: json['description'],
-//         start_date: json['start_date'],
-//         end_date: json['end_date'],
-//         phases: json['phases'],
-//         property: Property.fromJson(json['property']),
-//         recurrent_cost: json['recurrent_cost'],
-//         updatedAt: json['updatedAt']);
-//   }
-// }
+  factory ContactG.fromJson(Map<String, dynamic> json) {
+    final List<dynamic> groupList = json['groups'] ?? [];
+    final List<Group> groups =
+        groupList.map((groupJson) => Group.fromJson(groupJson)).toList();
+
+    return ContactG(
+      id: json['id'] as int ?? 0,
+      name: json['name'] ?? '',
+      contact: json['contact'] ?? '',
+      image: json['image'] ?? '',
+      created_at: json['created_at'] ?? '',
+      groups: groups,
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+    );
+  }
+}

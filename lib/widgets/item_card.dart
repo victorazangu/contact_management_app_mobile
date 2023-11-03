@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 
 import '../../../utils/defaultValues.dart';
 import '../../../utils/styles.dart';
+import '../utils/dateFormater.dart';
 
 // ignore: must_be_immutable
 class ItemCard extends StatefulWidget {
@@ -91,7 +92,7 @@ class _ItemCardState extends State<ItemCard> {
                               SizedBox(
                                 width: 5,
                               ),
-                              Text(widget.date, style: ThemeStyling.regular_14)
+                              Text(formatDate(widget.date), style: ThemeStyling.regular_14)
                             ],
                           ),
                           SizedBox(

@@ -23,21 +23,25 @@ class GroupWebService {
     }
     final response = await dio.get(Constants.multipleGroups);
     if (response.statusCode == 200) {
-      final result = response.data;
-      Iterable list = result['data'];
-      return list.map((group) => Group.fromJson(group)).toList();
+      final List<dynamic> responseData = response.data;
+      final List<Map<String, dynamic>> groupDataList =
+          List<Map<String, dynamic>>.from(responseData);
+
+      List<Group> groups =
+          groupDataList.map((group) => Group.fromJson(group)).toList();
+
+      return groups;
     } else {
       throw Exception("Error");
     }
   }
 
-  Future<List<Contact>> createGroup(data) async {
+  Future<Map<String, dynamic>> createGroup(data) async {
     final token = await loadToken();
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    print(data);
     final response = await dio.post(Constants.multipleGroups, data: data);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final result = response.data;
       return result['data'];
     } else {
@@ -45,7 +49,7 @@ class GroupWebService {
     }
   }
 
-  Future<List<Contact>> updateGroup(group_id, data) async {
+  Future<List<Group>> updateGroup(group_id, data) async {
     final token = await loadToken();
     if (token != null) {
       dio.options.headers['Authorization'] = 'Bearer $token';
@@ -60,7 +64,7 @@ class GroupWebService {
     }
   }
 
-  Future<List<Contact>> deleteGroup(group_id) async {
+  Future<List<Group>> deleteGroup(group_id) async {
     final token = await loadToken();
     if (token != null) {
       dio.options.headers['Authorization'] = 'Bearer $token';
@@ -74,7 +78,7 @@ class GroupWebService {
     }
   }
 
-  Future<List<Contact>> viewSingleGroup(group_id) async {
+  Future<List<Group>> viewSingleGroup(group_id) async {
     final token = await loadToken();
     if (token != null) {
       dio.options.headers['Authorization'] = 'Bearer $token';
@@ -88,7 +92,7 @@ class GroupWebService {
     }
   }
 
-  Future<List<Contact>> addContactToGroup(group_id, contact_id) async {
+  Future<List<Group>> addContactToGroup(group_id, contact_id) async {
     final token = await loadToken();
     if (token != null) {
       dio.options.headers['Authorization'] = 'Bearer $token';
@@ -103,7 +107,7 @@ class GroupWebService {
     }
   }
 
-  Future<List<Contact>> removeContactFromGroup(group_id, contact_id) async {
+  Future<List<Group>> removeContactFromGroup(group_id, contact_id) async {
     final token = await loadToken();
     if (token != null) {
       dio.options.headers['Authorization'] = 'Bearer $token';

@@ -1,13 +1,17 @@
+import 'package:contact_management_app_mobile/screens/group/group.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../screens/profile/profile.dart';
-import '../screens/group/group.dart';
-import '../screens/home/homepage.dart';
 import '../screens/contacts/contacts.dart';
+import '../screens/home/homepage.dart';
+import '../screens/profile/profile.dart';
 import '../utils/defaultValues.dart';
+import '../viewmodels/contacts/contact_provider.dart';
+import '../viewmodels/groups/group_provider.dart';
+import '../viewmodels/user/user_provider.dart';
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({Key? key}) : super(key: key);
+  const MainNavigation({super.key});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -16,97 +20,88 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
 
+  static final List<Widget> _widgetOptions = <Widget>[
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ContactListViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => GroupListViewModel(),
+        ),
+      ],
+      child: const HomePage(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => ContactListViewModel(),
+      child: const Contacts(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => GroupListViewModel(),
+      child: Group(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => UserListViewModel(),
+      child: Profile(),
+    ),
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  // void _changeSelectedIndex(int newIndex) {
-  //   setState(() {
-  //     _selectedIndex = newIndex;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     String title = _selectedIndex == 0
-        ? "Home"
+        ? ""
         : _selectedIndex == 1
-            ? "Contacts"
+            ? "Home"
             : _selectedIndex == 2
-                ? "Group"
+                ? "Contacts"
                 : _selectedIndex == 3
-                    ? "Profile"
-                    : "Unknown Screen";
+                    ? "Group"
+                    : _selectedIndex == 4
+                        ? "Profile"
+                        : "Unknown Screen";
 
     return Scaffold(
-      // Use a Container with a background image
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bg.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: _widgetOptions,
-        ),
-      ),
-      // appBar: AppBar(
-      //   backgroundColor: DefaultValues.mainPrimaryColor,
-      //   elevation: 0,
-      //   title: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     crossAxisAlignment: CrossAxisAlignment.center,
-      //     children: [
-      //       CircleAvatar(
-      //         backgroundImage: AssetImage('assets/images/default.png'),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+      backgroundColor: DefaultValues.mainPrimaryColor,
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: DefaultValues.mainBackgroundColor,
+        backgroundColor: DefaultValues.mainPrimaryColor,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.contact_emergency),
-            label: 'Contacts',
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.group,
               size: 34,
             ),
-            label: 'Group',
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: '',
           ),
         ],
         currentIndex: _selectedIndex,
         unselectedItemColor: Colors.white,
         unselectedIconTheme: const IconThemeData(color: Colors.white),
         selectedIconTheme:
-            const IconThemeData(color: DefaultValues.mainPrimaryColor),
+            const IconThemeData(color: DefaultValues.mainBackgroundColor),
         selectedLabelStyle: const TextStyle(fontSize: 0),
         selectedItemColor: DefaultValues.mainPrimaryColor,
         onTap: _onItemTapped,
       ),
     );
   }
-
-  static List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    Contacts(),
-    Group(),
-    Profile(),
-  ];
 }

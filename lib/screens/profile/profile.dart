@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 
 import '../../utils/defaultValues.dart';
+import '../../viewmodels/user/user_provider.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -10,46 +12,46 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String name = "Victor Azangu";
-  String phone = "+1234567890";
-  String email = "victorsazangu@gmail.com";
-  File? profileImage;
-
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  late UserListViewModel profile;
 
   bool isEditing = false;
+  File? profileImage;
 
-  // Scroll controller for the ListView
-  final ScrollController _scrollController = ScrollController();
+  late TextEditingController nameController;
+  late TextEditingController phoneController;
+  late TextEditingController emailController;
 
   @override
-  void dispose() {
-    // Dispose the scroll controller when not needed
-    _scrollController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    profile = Provider.of<UserListViewModel>(context, listen: false);
+    nameController = TextEditingController(
+        text: profile.users.isNotEmpty ? profile.users[0].name : '');
+    phoneController = TextEditingController(
+        text: profile.users.isNotEmpty ? profile.users[0].phone : '');
+    emailController = TextEditingController(
+        text: profile.users.isNotEmpty ? profile.users[0].email : '');
   }
 
   @override
   Widget build(BuildContext context) {
+    print("profile ${profile.users}");
     return Center(
-      // Center the Card vertically
       child: Card(
         elevation: 4,
         color: const Color.fromARGB(255, 66, 41, 7),
         margin: EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(height: 20),
             buildProfileImage(),
             ListView(
               shrinkWrap: true,
-              controller: _scrollController,
               children: [
-                buildInfoField("Name", name, nameController),
-                buildInfoField("Phone", phone, phoneController),
-                buildInfoField("Email", email, emailController),
+                buildInfoField("Name", nameController.text, nameController),
+                buildInfoField("Phone", phoneController.text, phoneController),
+                buildInfoField("Email", emailController.text, emailController),
                 SizedBox(height: 20),
                 ElevatedButton(
                   style: ButtonStyle(
@@ -66,9 +68,9 @@ class _ProfileState extends State<Profile> {
                   onPressed: () {
                     setState(() {
                       if (isEditing) {
-                        name = nameController.text;
-                        phone = phoneController.text;
-                        email = emailController.text;
+                        // profile.users[0].name = nameController.text;
+                        // profile.users[0].phone = phoneController.text;
+                        // profile.users[0].email = emailController.text;
                       }
                       isEditing = !isEditing;
                     });
