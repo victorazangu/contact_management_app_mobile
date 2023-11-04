@@ -1,11 +1,14 @@
 import "package:contact_management_app_mobile/utils/styles.dart";
 import "package:flutter/material.dart";
-import "../../forms/add_contact_to_group.dart";
+import "package:provider/provider.dart";
+import "../../forms/item_group_list.dart";
 import "../../utils/defaultValues.dart";
+import "../../viewmodels/groups/group_provider.dart";
 
-class ContactCard extends StatelessWidget {
+class ContactCard extends StatefulWidget {
   final String contact;
   final int contact_id;
+  // final int groupId;
 
   ContactCard({
     Key? key,
@@ -14,7 +17,19 @@ class ContactCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ContactCard> createState() => _ContactCardState();
+}
+
+class _ContactCardState extends State<ContactCard> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<GroupListViewModel>(context, listen: false).allGroups();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var groupList = Provider.of<GroupListViewModel>(context);
     return Container(
       padding: EdgeInsets.all(10),
       height: 100,
@@ -53,9 +68,7 @@ class ContactCard extends StatelessWidget {
                         color: DefaultValues.mainBackgroundColor,
                       ),
                       SizedBox(width: 5),
-                      Text(contact,
-                          style: ThemeStyling
-                              .regular_14), // Remove the `const` keyword
+                      Text(widget.contact, style: ThemeStyling.regular_14),
                     ],
                   ),
                 ],
@@ -63,30 +76,22 @@ class ContactCard extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               showModalBottomSheet<void>(
                 context: context,
+                backgroundColor: DefaultValues.mainPrimaryColor,
                 builder: (BuildContext context) {
-                  return Container(
-                    padding: EdgeInsets.all(20),
-                    color: DefaultValues.mainPrimaryColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.close),
-                              color: Colors.white,
-                              onPressed: () => Navigator.pop(context),
-                            )
-                          ],
+                  return ListView.builder(
+                    itemCount: groupList.groups.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        child: GroupItem(
+                          groupName: groupList.groups[index].name,
+                          groupId: groupList.groups[index].id,
+                          contact_id: widget.contact_id,
                         ),
-                        AddContactToGroupForm(),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               );

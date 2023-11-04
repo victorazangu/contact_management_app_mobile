@@ -198,17 +198,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   }
 
   void _submitProfileChanges() async {
-    print('Name: $name');
-    print('Email: $email');
-    print('Phone: $phone');
-
-    if (_image != null) {
-      print('Profile Image Path: ${_image!.path}');
-    } else {
-      print('Profile Image: No image selected');
-    }
-    var imagePath = _image!.path;
-
+    var imagePath = _image != null ? _image!.path : null;
     try {
       var data = {
         "name": name,

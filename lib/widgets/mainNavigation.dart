@@ -2,6 +2,7 @@ import 'package:contact_management_app_mobile/screens/group/group.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../forms/item_group_list.dart';
 import '../screens/contacts/contacts.dart';
 import '../screens/home/homepage.dart';
 import '../screens/profile/profile.dart';
@@ -21,31 +22,11 @@ class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => ContactListViewModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => GroupListViewModel(),
-        ),
-      ],
-      child: const HomePage(),
-    ),
-    ChangeNotifierProvider(
-      create: (_) => ContactListViewModel(),
-      child: const Contacts(),
-    ),
-    ChangeNotifierProvider(
-      create: (_) => GroupListViewModel(),
-      child: Group(),
-    ),
-    ChangeNotifierProvider(
-      create: (_) => UserListViewModel(),
-      child: UserProfilePage(),
-    ),
+    const HomePage(),
+    const Contacts(),
+    Group(),
+    UserProfilePage(),
   ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

@@ -1,52 +1,88 @@
-import 'package:contact_management_app_mobile/viewmodels/groups/group_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../viewmodels/groups/group_provider.dart';
+import '../services/group_service.dart';
+import '../utils/defaultValues.dart';
+import '../utils/styles.dart';
 
-class GroupList extends StatefulWidget {
-  const GroupList({super.key});
+class GroupItem extends StatefulWidget {
+  final String groupName;
+  final int groupId;
+  final int contact_id;
+
+  GroupItem({
+    required this.groupName,
+    required this.groupId,
+    required this.contact_id,
+  });
 
   @override
-  State<GroupList> createState() => _GroupListState();
+  State<GroupItem> createState() => _GroupItemState();
 }
 
-class _GroupListState extends State<GroupList> {
-  @override
-  void initState() {
-    super.initState();
-    var list =
-        Provider.of<GroupListViewModel>(context, listen: false).allGroups();
-  }
-
+class _GroupItemState extends State<GroupItem> {
+  final GroupWebService _groupWebService = GroupWebService();
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
-    final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
-    var list = Provider.of<GroupListViewModel>(context);
+    return Container(
+      height: 70,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Group : ${widget.groupName}',
+                  style: ThemeStyling.bold_20,
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        DefaultValues.secondaryColor),
+                  ),
+                  onPressed: () async {
+                    print('Updating contact group with ID: ${widget.groupId}');
+                    print('Updating contact with ID: ${widget.contact_id}');
 
-    var _items = list.groups;
-
-    return ReorderableListView(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      children: <Widget>[
-        for (int index = 0; index < _items.length; index += 1)
-          ListTile(
-            key: Key('$index'),
-            tileColor: _items[index] != null ? oddItemColor : evenItemColor,
-            title: Text('Item ${_items[index].name}'),
-          ),
-      ],
-      onReorder: (int oldIndex, int newIndex) {
-        setState(() {
-          if (oldIndex < newIndex) {
-            newIndex -= 1;
-          }
-          final int item = _items.removeAt(oldIndex) as int;
-          _items.insert(newIndex, item as GroupViewModel);
-        });
-      },
+                    try {
+                      var userData = await _groupWebService.addContactToGroup(
+                        widget.groupId,
+                        widget.contact_id,
+                      );
+                      print("group data $userData");
+                      if (userData != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Added to group '),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Error. Please try again.'),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      print('Error occurred: $e');
+                    }
+                  },
+                  child: Text(
+                    'Add to this Group',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
+          ],
+        ),
+      ),
     );
   }
 }

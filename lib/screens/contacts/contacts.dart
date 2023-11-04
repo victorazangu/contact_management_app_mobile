@@ -83,7 +83,6 @@ class _ContactsState extends State<Contacts> {
                   child: ContactCard(
                     contact: contacts[index].name,
                     contact_id: contacts[index].id,
-                
                   ),
                 );
               }),

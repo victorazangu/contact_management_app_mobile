@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
-import '../models/contact.dart';
 import '../models/group.dart';
 import '../utils/constants.dart';
 
@@ -92,31 +91,32 @@ class GroupWebService {
     }
   }
 
-  Future<List<Group>> addContactToGroup(group_id, contact_id) async {
+  Future<Map<String, dynamic>> addContactToGroup(group_id, contact_id) async {
     final token = await loadToken();
     if (token != null) {
       dio.options.headers['Authorization'] = 'Bearer $token';
     }
     final response =
-        await dio.get(Constants.addContactToGroup(group_id, contact_id));
+        await dio.post(Constants.addContactToGroup(group_id, contact_id));
     if (response.statusCode == 200) {
       final result = response.data;
-      return result['data'];
+      return result;
     } else {
       throw Exception("Error");
     }
   }
 
-  Future<List<Group>> removeContactFromGroup(group_id, contact_id) async {
+  Future<Map<String, dynamic>> removeContactFromGroup(
+      group_id, contact_id) async {
     final token = await loadToken();
     if (token != null) {
       dio.options.headers['Authorization'] = 'Bearer $token';
     }
-    final response =
-        await dio.get(Constants.removeContactFromGroup(group_id, contact_id));
+    final response = await dio
+        .delete(Constants.removeContactFromGroup(group_id, contact_id));
     if (response.statusCode == 200) {
       final result = response.data;
-      return result['data'];
+      return result;
     } else {
       throw Exception("Error");
     }

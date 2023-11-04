@@ -1,9 +1,13 @@
 import 'package:contact_management_app_mobile/screens/auth/login.dart';
 import 'package:contact_management_app_mobile/screens/auth/register.dart';
+import 'package:contact_management_app_mobile/viewmodels/contacts/contact_provider.dart';
+import 'package:contact_management_app_mobile/viewmodels/groups/group_provider.dart';
+import 'package:contact_management_app_mobile/viewmodels/user/user_provider.dart';
 import 'package:contact_management_app_mobile/widgets/mainNavigation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +17,11 @@ void main() async {
   await Hive.openBox<String>("tokenBox");
 
   runApp(
-    MyApp(),
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => ContactListViewModel()),
+      ChangeNotifierProvider(create: (_) => GroupListViewModel()),
+      ChangeNotifierProvider(create: (_) => UserListViewModel()),
+    ], child: MyApp()),
   );
 }
 
