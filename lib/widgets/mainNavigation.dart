@@ -42,7 +42,7 @@ class _MainNavigationState extends State<MainNavigation> {
     ),
     ChangeNotifierProvider(
       create: (_) => UserListViewModel(),
-      child: Profile(),
+      child: UserProfilePage(),
     ),
   ];
 

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../services/user_service.dart';
 import '../../utils/defaultValues.dart';
 import '../../viewmodels/contacts/contact_provider.dart';
 import '../../viewmodels/groups/group_provider.dart';
 import '../../widgets/item_card.dart';
+import '../auth/login.dart';
 import '../group/group.dart';
 
 class HomePage extends StatefulWidget {
-  // final Function(int) changeSelectedIndex;
-
   const HomePage({super.key});
 
   @override
@@ -16,6 +16,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final UserWebService _logoutWebService = UserWebService();
+
+  void _handleLogoutAndNavigateToLogin(BuildContext context) {
+    _logoutWebService.logout();
+
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => Login(),
+      ),
+      (route) => false,
+    );
+  }
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: DefaultValues.mainPrimaryColor,
+          title: Text(
+            'Confirm Logout',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            'Are you sure you want to log out?',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                _handleLogoutAndNavigateToLogin(context);
+              },
+              child: Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +89,20 @@ class _HomePageState extends State<HomePage> {
           children: [
             SizedBox(
               height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.logout_rounded),
+                    onPressed: () {
+                      _confirmLogout(context);
+                    },
+                  ),
+                ],
+              ),
             ),
             TextField(
               style: TextStyle(

@@ -1,31 +1,38 @@
-import '../../models/user.dart';
+import 'package:flutter/material.dart';
 
-class UserViewModel {
-  final User _user;
+import '../../models/profile.dart';
 
-  UserViewModel({required User user}) : _user = user;
+class UserProfileViewModel {
+  final UserProfile _userProfile;
+
+  UserProfileViewModel({required UserProfile userProfile})
+      : _userProfile = userProfile;
 
   int get id {
-    return _user.id;
+    return _userProfile.id;
   }
 
   String get name {
-    return _user.name;
+    return _userProfile.name;
   }
 
   String get email {
-    return _user.email;
-  }
-
-  String get profile {
-    return _user.profile;
+    return _userProfile.email;
   }
 
   String get phone {
-    return _user.phone;
+    return _userProfile.phone;
   }
 
-  String get created_at {
-    return _user.created_at;
+  String get profile {
+    return _userProfile.profile;
+  }
+
+  String get createdAt {
+    return _userProfile.createdAt;
+  }
+
+  String get updatedAt {
+    return _userProfile.updatedAt;
   }
 }

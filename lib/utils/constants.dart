@@ -6,6 +6,8 @@ class Constants {
   static const logout = "http://127.0.0.1:8000/api/v1/logout";
   static const updateProfilePicture =
       "http://127.0.0.1:8000/api/v1/profile/update-profile";
+  static const updateUserProfile =
+      "http://127.0.0.1:8000/api/v1/profile";
 
   // contacts
   static const multipleContacts = "http://127.0.0.1:8000/api/v1/contacts";

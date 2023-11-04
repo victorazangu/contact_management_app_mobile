@@ -21,47 +21,42 @@ class UserWebService {
     dio.options.headers['Content-Type'] = 'application/json';
   }
 
-  Future<Map<String, dynamic>?> profile() async {
+  Future<Map<String, dynamic>> profile() async {
     final token = await loadToken();
 
     dio.options.headers['Authorization'] = 'Bearer $token';
 
     final response = await dio.get(Constants.profile);
     if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = response.data;
-
-      print("profile at service $responseData");
+      Map<String, dynamic> responseData = response.data['data'];
       return responseData;
     } else {
       throw Exception("Error");
     }
   }
 
-  Future<Map<String, dynamic>?> logout() async {
+  Future<void> logout() async {
     final token = await loadToken();
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
-    final response = await dio.get(Constants.logout);
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+
+    final response = await dio.post(Constants.logout);
+
     if (response.statusCode == 200) {
-      final result = response.data;
       deleteToken();
       Hive.close();
-      return result;
     } else {
-      throw Exception("Error");
+      throw Exception("Error during logout");
     }
   }
 
-  Future<Map<String, dynamic>?> updateProfilePicture() async {
+  Future<Map<String, dynamic>> updateUserProfile(data) async {
     final token = await loadToken();
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
-    final response = await dio.put(Constants.updateProfilePicture);
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    dio.options.headers['Content-Type'] = 'multipart/form-data';
+    final response = await dio.put(Constants.updateUserProfile, data: data);
     if (response.statusCode == 200) {
-      final result = response.data;
-      Map<String, dynamic> responseData = json.decode(result);
+      Map<String, dynamic> responseData = response.data['data'];
       return responseData;
     } else {
       throw Exception("Error");

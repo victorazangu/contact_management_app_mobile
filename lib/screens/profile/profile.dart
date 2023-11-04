@@ -1,165 +1,244 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'dart:io';
 
-import '../../utils/defaultValues.dart';
-import '../../viewmodels/user/user_provider.dart';
+import '../../services/user_service.dart';
 
-class Profile extends StatefulWidget {
+class UserProfilePage extends StatefulWidget {
   @override
-  _ProfileState createState() => _ProfileState();
+  _UserProfilePageState createState() => _UserProfilePageState();
 }
 
-class _ProfileState extends State<Profile> {
-  late UserListViewModel profile;
+class _UserProfilePageState extends State<UserProfilePage> {
+  File? _image;
+  final picker = ImagePicker();
 
-  bool isEditing = false;
-  File? profileImage;
+  String name = '';
+  String email = '';
+  String phone = '';
 
-  late TextEditingController nameController;
-  late TextEditingController phoneController;
-  late TextEditingController emailController;
-
+  final UserWebService _userWebService = UserWebService();
   @override
   void initState() {
     super.initState();
-    profile = Provider.of<UserListViewModel>(context, listen: false);
-    nameController = TextEditingController(
-        text: profile.users.isNotEmpty ? profile.users[0].name : '');
-    phoneController = TextEditingController(
-        text: profile.users.isNotEmpty ? profile.users[0].phone : '');
-    emailController = TextEditingController(
-        text: profile.users.isNotEmpty ? profile.users[0].email : '');
+    getProfileData();
+  }
+
+  Future<void> getProfileData() async {
+    try {
+      Map<String, dynamic>? userData = await _userWebService.profile();
+      if (userData != null) {
+        setState(() {
+          name = userData['name'];
+          email = userData['email'];
+          phone = userData['phone'];
+        });
+      }
+    } catch (error) {
+      print('Error fetching profile data: $error');
+    }
+  }
+
+  void _getImageFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("profile ${profile.users}");
-    return Center(
-      child: Card(
-        elevation: 4,
-        color: const Color.fromARGB(255, 66, 41, 7),
-        margin: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(height: 20),
-            buildProfileImage(),
-            ListView(
-              shrinkWrap: true,
-              children: [
-                buildInfoField("Name", nameController.text, nameController),
-                buildInfoField("Phone", phoneController.text, phoneController),
-                buildInfoField("Email", emailController.text, emailController),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.disabled)) {
-                          return DefaultValues.mainPrimaryColor
-                              .withOpacity(0.5);
-                        }
-                        return DefaultValues.mainPrimaryColor;
-                      },
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (isEditing) {
-                        // profile.users[0].name = nameController.text;
-                        // profile.users[0].phone = phoneController.text;
-                        // profile.users[0].email = emailController.text;
-                      }
-                      isEditing = !isEditing;
-                    });
-                  },
-                  child: Text(isEditing ? 'Save' : 'Edit'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    ImageProvider<Object>? imageProvider;
 
-  Widget buildInfoField(
-      String label, String value, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    if (_image != null) {
+      imageProvider = FileImage(_image!);
+    } else {
+      imageProvider = AssetImage('assets/images/default.png');
+    }
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          SizedBox(
+            height: 50,
           ),
-          isEditing
-              ? TextField(
-                  controller: controller,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'Enter $label',
-                    hintStyle: TextStyle(color: Colors.white),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: DefaultValues.mainPrimaryColor,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: DefaultValues.mainPrimaryColor,
-                      ),
-                    ),
-                  ),
-                )
-              : Text(
-                  value,
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-          SizedBox(height: 10),
+          _buildProfileImageField(context, imageProvider),
+          SizedBox(
+            height: 10,
+          ),
+          _buildProfileField(context, 'Name', name),
+          SizedBox(
+            height: 10,
+          ),
+          _buildProfileField(context, 'Email', email),
+          SizedBox(
+            height: 10,
+          ),
+          _buildProfileField(context, 'Phone', phone),
+          SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: () {
+              _submitProfileChanges();
+            },
+            child: Text('Save Changes'),
+          ),
         ],
       ),
     );
   }
 
-  Widget buildProfileImage() {
+  Widget _buildProfileField(BuildContext context, String label, String value) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        isEditing
-            ? GestureDetector(
-                onTap: () async {
-                  final image = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
-                  if (image != null) {
+        Text(
+          label,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 4.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              value,
+              style: TextStyle(fontSize: 16),
+            ),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                _showEditModal(context, label, value, (newValue) {
+                  if (label == 'Name') {
                     setState(() {
-                      profileImage = File(image.path);
+                      name = newValue;
+                    });
+                  } else if (label == 'Email') {
+                    setState(() {
+                      email = newValue;
+                    });
+                  } else if (label == 'Phone') {
+                    setState(() {
+                      phone = newValue;
                     });
                   }
-                },
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: profileImage != null
-                      ? FileImage(profileImage!)
-                      : AssetImage('assets/images/default.png')
-                          as ImageProvider,
-                ),
-              )
-            : CircleAvatar(
-                radius: 50,
-                backgroundImage: profileImage != null
-                    ? FileImage(profileImage!)
-                    : AssetImage('assets/images/default.png') as ImageProvider,
-              ),
-        SizedBox(height: 10),
+                });
+              },
+            ),
+          ],
+        ),
+        Divider(),
       ],
     );
+  }
+
+  Widget _buildProfileImageField(
+      BuildContext context, ImageProvider<Object> imageProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Text(
+            'Profile Image',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(height: 4.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CircleAvatar(
+              radius: 50.0,
+              backgroundImage: imageProvider,
+            ),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                _getImageFromGallery();
+              },
+            ),
+          ],
+        ),
+        Divider(),
+      ],
+    );
+  }
+
+  void _showEditModal(BuildContext context, String label, String currentValue,
+      Function(String) onSave) {
+    TextEditingController textController =
+        TextEditingController(text: currentValue);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit $label'),
+          content: TextField(controller: textController),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                onSave(textController.text);
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _submitProfileChanges() async {
+    print('Name: $name');
+    print('Email: $email');
+    print('Phone: $phone');
+
+    if (_image != null) {
+      print('Profile Image Path: ${_image!.path}');
+    } else {
+      print('Profile Image: No image selected');
+    }
+    var imagePath = _image!.path;
+
+    try {
+      var data = {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "profile": imagePath
+      };
+      Map<String, dynamic>? userData =
+          await _userWebService.updateUserProfile(data);
+      print("Res data at profile page $userData");
+
+      if (userData != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Updated Successfull'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error Please try again.'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
   }
 }
