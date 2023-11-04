@@ -93,9 +93,7 @@ class GroupWebService {
 
   Future<Map<String, dynamic>> addContactToGroup(group_id, contact_id) async {
     final token = await loadToken();
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
+    dio.options.headers['Authorization'] = 'Bearer $token';
     final response =
         await dio.post(Constants.addContactToGroup(group_id, contact_id));
     if (response.statusCode == 200) {
@@ -109,9 +107,7 @@ class GroupWebService {
   Future<Map<String, dynamic>> removeContactFromGroup(
       group_id, contact_id) async {
     final token = await loadToken();
-    if (token != null) {
-      dio.options.headers['Authorization'] = 'Bearer $token';
-    }
+    dio.options.headers['Authorization'] = 'Bearer $token';
     final response = await dio
         .delete(Constants.removeContactFromGroup(group_id, contact_id));
     if (response.statusCode == 200) {

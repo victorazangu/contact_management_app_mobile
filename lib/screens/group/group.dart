@@ -35,6 +35,7 @@ class _GroupState extends State<Group> {
               CircleAvatar(
                 backgroundImage: AssetImage('assets/images/default.png'),
               ),
+              Text("ALL Groups"),
               IconButton(
                 icon: Icon(
                   Icons.add,

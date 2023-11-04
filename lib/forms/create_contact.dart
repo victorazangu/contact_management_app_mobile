@@ -36,25 +36,25 @@ class _CreateContactFormState extends State<CreateContactForm> {
     });
 
     try {
-      await _contactWebService.createContact(formData);
+      var c = await _contactWebService.createContact(formData);
 
-      // if (c != null) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text('Contact added'),
-      //       behavior: SnackBarBehavior.floating,
-      //       backgroundColor: Colors.green,
-      //     ),
-      //   );
-      // } else {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('Error. Please try again.'),
-      //       behavior: SnackBarBehavior.floating,
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
+      if (c != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Contact added'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error. Please try again.'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       setState(() {
         _selectedImage = null;
       });

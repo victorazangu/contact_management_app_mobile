@@ -27,16 +27,17 @@ class _ContactsState extends State<Contacts> {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.only(top: 10),
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.only(top: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundImage: AssetImage('assets/images/default.png'),
               ),
+              const Text("ALL Contacts"),
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.add,
                   color: Colors.white,
                   size: 25,
@@ -47,7 +48,7 @@ class _ContactsState extends State<Contacts> {
                     builder: (BuildContext context) {
                       return SingleChildScrollView(
                         child: Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           color: DefaultValues.mainPrimaryColorDarker,
                           child: Column(
                             children: <Widget>[
@@ -55,7 +56,7 @@ class _ContactsState extends State<Contacts> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   IconButton(
-                                    icon: Icon(Icons.close),
+                                    icon: const Icon(Icons.close),
                                     color: Colors.white,
                                     onPressed: () => Navigator.pop(context),
                                   )
@@ -79,7 +80,7 @@ class _ContactsState extends State<Contacts> {
               itemCount: contacts.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                  margin: const EdgeInsets.only(top: 10, bottom: 10),
                   child: ContactCard(
                     contact: contacts[index].name,
                     contact_id: contacts[index].id,

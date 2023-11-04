@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../main.dart';
 import '../../services/user_service.dart';
 import '../../utils/defaultValues.dart';
 import '../../viewmodels/contacts/contact_provider.dart';
 import '../../viewmodels/groups/group_provider.dart';
 import '../../widgets/item_card.dart';
 import '../auth/login.dart';
-import '../group/group.dart';
+import '../contacts/contacts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> {
 
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => Login(),
+        builder: (context) => const Login(),
       ),
       (route) => false,
     );
@@ -36,11 +37,11 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: DefaultValues.mainPrimaryColor,
-          title: Text(
+          title: const Text(
             'Confirm Logout',
             style: TextStyle(color: Colors.white),
           ),
-          content: Text(
+          content: const Text(
             'Are you sure you want to log out?',
           ),
           actions: <Widget>[
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 'Cancel',
                 style: TextStyle(color: Colors.white),
               ),
@@ -57,7 +58,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 _handleLogoutAndNavigateToLogin(context);
               },
-              child: Text(
+              child: const Text(
                 'Logout',
                 style: TextStyle(color: Colors.white),
               ),
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(
@@ -96,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.logout_rounded),
+                    icon: const Icon(Icons.logout_rounded),
                     onPressed: () {
                       _confirmLogout(context);
                     },
@@ -105,11 +106,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             TextField(
-              style: TextStyle(
+              style: const TextStyle(
                   color: DefaultValues.textColor, fontFamily: 'Regular'),
               decoration: InputDecoration(
                   prefixIcon:
-                      Icon(Icons.search, color: DefaultValues.textColor),
+                      const Icon(Icons.search, color: DefaultValues.textColor),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none),
@@ -119,10 +120,10 @@ class _HomePageState extends State<HomePage> {
                   fillColor: DefaultValues.secondaryColor,
                   filled: true),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -133,9 +134,8 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(color: Colors.orange),
                 ),
                 GestureDetector(
-                  onTap: () => {
-                    print("cliked")
-                    // widget.changeSelectedIndex(1)
+                  onTap: () {
+                    print("to be implemented");
                   },
                   child: const Text(
                     'view all',
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             SingleChildScrollView(
@@ -161,14 +161,14 @@ class _HomePageState extends State<HomePage> {
                 }).toList(),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Text(
                       'Groups',
                       style: TextStyle(color: Colors.orange),
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             SingleChildScrollView(

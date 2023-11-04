@@ -1,34 +1,61 @@
 import "package:contact_management_app_mobile/utils/styles.dart";
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
-import "../../forms/item_group_list.dart";
+import "../../services/group_service.dart";
 import "../../utils/defaultValues.dart";
-import "../../viewmodels/groups/group_provider.dart";
 
-class ContactCard extends StatefulWidget {
+class ContactCardGroup extends StatefulWidget {
   final String contact;
   final int contact_id;
+  final int group_id;
 
-  const ContactCard({
+  ContactCardGroup({
     Key? key,
     required this.contact,
     required this.contact_id,
+    required this.group_id,
   }) : super(key: key);
 
   @override
-  State<ContactCard> createState() => _ContactCardState();
+  State<ContactCardGroup> createState() => _ContactCardGroupState();
 }
 
-class _ContactCardState extends State<ContactCard> {
+class _ContactCardGroupState extends State<ContactCardGroup> {
+  final GroupWebService _groupWebService = GroupWebService();
   @override
   void initState() {
     super.initState();
-    Provider.of<GroupListViewModel>(context, listen: false).allGroups();
   }
 
   @override
   Widget build(BuildContext context) {
-    var groupList = Provider.of<GroupListViewModel>(context);
+    void handleRemove() async {
+      try {
+        var data = await _groupWebService.removeContactFromGroup(
+          widget.group_id,
+          widget.contact_id,
+        );
+        if (data != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(data['message']),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Error. Please try again.'),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        print('Error occurred: $e');
+      }
+    }
+
     return Container(
       padding: const EdgeInsets.all(10),
       height: 100,
@@ -55,7 +82,6 @@ class _ContactCardState extends State<ContactCard> {
               color: DefaultValues.mainPrimaryColor,
             ),
             child: Padding(
-              // Remove the `const` keyword
               padding: const EdgeInsets.all(5.0),
               child: Row(
                 children: [
@@ -75,26 +101,7 @@ class _ContactCardState extends State<ContactCard> {
             ),
           ),
           GestureDetector(
-            onTap: () async {
-              showModalBottomSheet<void>(
-                context: context,
-                backgroundColor: DefaultValues.mainPrimaryColor,
-                builder: (BuildContext context) {
-                  return ListView.builder(
-                    itemCount: groupList.groups.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        child: GroupItem(
-                          groupName: groupList.groups[index].name,
-                          groupId: groupList.groups[index].id,
-                          contact_id: widget.contact_id,
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
+            onTap: handleRemove,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -107,12 +114,12 @@ class _ContactCardState extends State<ContactCard> {
                     Row(
                       children: [
                         Icon(
-                          Icons.add,
+                          Icons.exposure_minus_1,
                           size: 30,
                           color: DefaultValues.mainBackgroundColor,
                         ),
                         SizedBox(width: 5),
-                        Text("to group", style: ThemeStyling.regular_14),
+                        Text("remove", style: ThemeStyling.regular_14),
                       ],
                     ),
                   ],

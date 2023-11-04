@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "../../utils/defaultValues.dart";
 import "../../viewmodels/groups/group_view_model.dart";
 import "../contacts/contact_card.dart";
+import "contact_list_on_group.dart";
 import "group_card.dart";
 
 class SingleGroupPage extends StatelessWidget {
@@ -38,9 +39,10 @@ class SingleGroupPage extends StatelessWidget {
             Text("My contacts"),
             Column(
               children: (group?.contacts ?? [])
-                  .map((contact) => ContactCard(
+                  .map((contact) => ContactCardGroup(
                         contact: contact.name,
                         contact_id: contact.id,
+                        group_id: group.id,
                       ))
                   .toList(),
             ),

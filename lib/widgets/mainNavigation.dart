@@ -1,15 +1,10 @@
 import 'package:contact_management_app_mobile/screens/group/group.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../forms/item_group_list.dart';
 import '../screens/contacts/contacts.dart';
 import '../screens/home/homepage.dart';
 import '../screens/profile/profile.dart';
 import '../utils/defaultValues.dart';
-import '../viewmodels/contacts/contact_provider.dart';
-import '../viewmodels/groups/group_provider.dart';
-import '../viewmodels/user/user_provider.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -17,6 +12,7 @@ class MainNavigation extends StatefulWidget {
   @override
   State<MainNavigation> createState() => _MainNavigationState();
 }
+
 
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;

@@ -60,7 +60,7 @@ class AuthWebService {
         }
         return null;
       } else {
-        print("Error: HTTP Status Code ${response.statusCode}");
+   
         return null;
       }
     } catch (e) {

@@ -21,6 +21,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => ContactListViewModel()),
       ChangeNotifierProvider(create: (_) => GroupListViewModel()),
       ChangeNotifierProvider(create: (_) => UserListViewModel()),
+      ChangeNotifierProvider(create: (_) => MainNavigationViewModel()),
     ], child: MyApp()),
   );
 }
@@ -45,5 +46,16 @@ class MyApp extends StatelessWidget {
         },
       },
     );
+  }
+}
+
+class MainNavigationViewModel extends ChangeNotifier {
+  int _selectedIndex = 0;
+
+  int get selectedIndex => _selectedIndex;
+
+  void updateSelectedIndex(int index) {
+    _selectedIndex = index;
+    notifyListeners();
   }
 }

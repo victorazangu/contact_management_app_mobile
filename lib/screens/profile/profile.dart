@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import '../../services/user_service.dart';
+import '../../utils/defaultValues.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -81,6 +82,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
           _buildProfileField(context, 'Phone', phone),
           SizedBox(height: 16.0),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  DefaultValues.mainPrimaryColorDarker),
+            ),
             onPressed: () {
               _submitProfileChanges();
             },
@@ -141,8 +146,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
       children: [
         Center(
           child: Text(
-            'Profile Image',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            'Profile',
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
         SizedBox(height: 4.0),
