@@ -60,7 +60,6 @@ class AuthWebService {
         }
         return null;
       } else {
-   
         return null;
       }
     } catch (e) {
@@ -68,5 +67,4 @@ class AuthWebService {
       return null;
     }
   }
-
 }
